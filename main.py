@@ -146,7 +146,7 @@ p = pipeline.fit(X_train, y_train)
 print(features)
 explainer = shap.Explainer(pipeline.predict, X_train)
 shap_values = explainer(X_test)
-
+print(shap_values)
 
 
 shap.initjs()
@@ -154,16 +154,23 @@ plt.title('Waterfall for logistic regression')
 shap.plots.waterfall(shap_values[0])
 
 
-
+shap.plots.bar(shap_values)
+shap.plots.beeswarm(shap_values)
 
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.set_title("Decision Tree")
 rf_disp = PartialDependenceDisplay.from_estimator(reg, X_train, ["age", "bmi"], ax=ax)
+plt.show()
 
 
 
+# Get expected value and shap values array
+explainer = shap.Explainer(reg)
+expected_value = explainer.expected_value
+shap_array = explainer.shap_values(X)
 
-
+#Descion plot for first 10 observations
+shap.decision_plot(expected_value, shap_array[0:10],feature_names=list(X.columns))
 
 
 
